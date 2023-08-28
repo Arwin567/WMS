@@ -1,0 +1,6 @@
+Flask==2.1.0
+flask-socketio
+requests==2.30.0
+langchain==0.0.161
+streamlit==1.16.0
+pdfquery
