@@ -8,6 +8,14 @@ st.set_page_config(page_title="ChatPDF")
 
 
 def display_messages():
+    """Display chat messages in the application.
+
+    This function displays chat messages in the application interface. It
+    iterates over the messages stored in the session state and displays each
+    message using the 'message' function. It also creates a
+    'thinking_spinner' element in the session state.
+    """
+
     st.subheader("Chat")
     for i, (msg, is_user) in enumerate(st.session_state["messages"]):
         message(msg, is_user=is_user, key=str(i))
@@ -15,6 +23,13 @@ def display_messages():
 
 
 def process_input():
+    """Process user input by stripping leading and trailing whitespaces and
+    querying a PDF based on the input.
+
+    If user input is provided and not empty, it strips leading and trailing
+    whitespaces and queries a PDF based on the input.
+    """
+
     if st.session_state["user_input"] and len(st.session_state["user_input"].strip()) > 0:
         user_text = st.session_state["user_input"].strip()
         with st.session_state["thinking_spinner"], st.spinner(f"Thinking"):
@@ -25,6 +40,13 @@ def process_input():
 
 
 def read_and_save_file():
+    """Reset the knowledge base and ingest PDF files uploaded by the user.
+
+    This function resets the knowledge base, initializes message list and
+    user input, then iterates through the uploaded files. Each file is
+    temporarily saved, ingested using pdfquery, and then removed.
+    """
+
     st.session_state["pdfquery"].forget()  # to reset the knowledge base
     st.session_state["messages"] = []
     st.session_state["user_input"] = ""
@@ -44,6 +66,14 @@ def is_openai_api_key_set() -> bool:
 
 
 def main():
+    """Main function for ChatPDF application.
+
+    This function initializes the session state variables, including
+    messages, OPENAI_API_KEY, and pdfquery. It allows the user to input the
+    OpenAI API Key, upload a document, display messages, input new messages,
+    and provides a link to the source code on GitHub.
+    """
+
     if len(st.session_state) == 0:
         st.session_state["messages"] = []
         st.session_state["OPENAI_API_KEY"] = os.environ.get("OPENAI_API_KEY", "")
