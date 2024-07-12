@@ -8,6 +8,12 @@ st.set_page_config(page_title="ChatPDF")
 
 
 def display_messages():
+    """Display chat messages in the application.
+
+    It displays chat messages stored in the session state. Each message is
+    shown with an indicator whether it is from the user or the system.
+    """
+
     st.subheader("Chat")
     for i, (msg, is_user) in enumerate(st.session_state["messages"]):
         message(msg, is_user=is_user, key=str(i))
@@ -15,6 +21,11 @@ def display_messages():
 
 
 def process_input():
+    """Process the user input by stripping any leading or trailing whitespaces.
+    It then queries a PDF based on the user input and appends the user input
+    and query result to the session messages.
+    """
+
     if st.session_state["user_input"] and len(st.session_state["user_input"].strip()) > 0:
         user_text = st.session_state["user_input"].strip()
         with st.session_state["thinking_spinner"], st.spinner(f"Thinking"):
@@ -25,6 +36,13 @@ def process_input():
 
 
 def read_and_save_file():
+    """Reset the knowledge base and ingest PDF files uploaded by the user.
+
+    This function resets the knowledge base, clears messages, and user
+    input. It then iterates through each uploaded file, ingests the PDF
+    content, and removes the temporary file after ingestion.
+    """
+
     st.session_state["pdfquery"].forget()  # to reset the knowledge base
     st.session_state["messages"] = []
     st.session_state["user_input"] = ""
@@ -44,6 +62,14 @@ def is_openai_api_key_set() -> bool:
 
 
 def main():
+    """Main function for ChatPDF application.
+
+    This function initializes the session state variables, including
+    messages, OPENAI_API_KEY, and pdfquery. It allows users to input their
+    OpenAI API Key securely, upload a PDF document, display messages, and
+    interact with the application.
+    """
+
     if len(st.session_state) == 0:
         st.session_state["messages"] = []
         st.session_state["OPENAI_API_KEY"] = os.environ.get("OPENAI_API_KEY", "")
