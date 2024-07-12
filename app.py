@@ -17,6 +17,18 @@ app = Flask(__name__)
 socketio = SocketIO(app)  
 @app.route('/qa', methods=['POST'])
 def question_answer():
+    """Perform a question-answer task using a PDF document and a query.
+
+    This function takes a PDF URL and a query as input. It downloads the
+    PDF, extracts text from the pages, generates embeddings for the text,
+    and then searches for relevant documents based on the query. Finally, it
+    uses a question-answering model to find the answer to the query from the
+    relevant documents.
+
+    Returns:
+        jsonify: A JSON response containing the answer to the query.
+    """
+
     try:
       
         request_data = request.get_json()
