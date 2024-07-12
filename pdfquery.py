@@ -19,6 +19,19 @@ class PDFQuery:
         self.db = None
 
     def ask(self, question: str) -> str:
+        """Responds to a question based on relevant documents in the database.
+
+        If a document chain is not set, it prompts to add a document. Otherwise,
+        it retrieves relevant documents from the database and processes the
+        question using the document chain.
+
+        Args:
+            question (str): The question to respond to.
+
+        Returns:
+            str: The response to the input question.
+        """
+
         if self.chain is None:
             response = "Please, add a document."
         else:
@@ -27,6 +40,13 @@ class PDFQuery:
         return response
 
     def ingest(self, file_path: os.PathLike) -> None:
+        """Ingests a PDF file, processes the text, and creates a retriever for
+        further operations.
+
+        Args:
+            file_path (os.PathLike): Path to the PDF file to be ingested.
+        """
+
         loader = PyPDFium2Loader(file_path)
         documents = loader.load()
         splitted_documents = self.text_splitter.split_documents(documents)
@@ -35,5 +55,11 @@ class PDFQuery:
         self.chain = load_qa_chain(ChatOpenAI(temperature=0), chain_type="stuff")
 
     def forget(self) -> None:
+        """Reset the database and blockchain references to None.
+
+        This method resets the database and blockchain references to None,
+        effectively forgetting any existing data.
+        """
+
         self.db = None
         self.chain = None
